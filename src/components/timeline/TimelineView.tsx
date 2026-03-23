@@ -1,6 +1,5 @@
 import React, { useMemo, useRef } from 'react';
 import { useAppStore } from '../../store/useAppStore';
-import { Task } from '../../types';
 import { PRIORITY_COLORS } from '../../utils';
 import { USERS } from '../../data/generator';
 

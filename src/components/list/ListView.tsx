@@ -1,7 +1,7 @@
 import React, { useRef, useState, useEffect, useCallback, useMemo } from 'react';
 import { useAppStore } from '../../store/useAppStore';
 import { Task, SortField } from '../../types';
-import { formatDate, isOverdue, isDueToday, PRIORITY_ORDER, PRIORITY_COLORS, STATUS_COLORS } from '../../utils';
+import { formatDate, isOverdue, isDueToday, PRIORITY_ORDER, PRIORITY_COLORS } from '../../utils';
 import { PriorityBadge } from '../ui/PriorityBadge';
 import { Avatar } from '../ui/Avatar';
 import { StatusDropdown } from '../ui/StatusDropdown';

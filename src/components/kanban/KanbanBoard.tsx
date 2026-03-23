@@ -2,7 +2,6 @@ import React, { useState, useCallback, useRef } from 'react';
 import { useAppStore } from '../../store/useAppStore';
 import { KanbanColumn } from './KanbanColumn';
 import { Status } from '../../types';
-import { ALL_STATUSES } from '../../utils';
 
 const COLUMNS: Status[] = ['To Do', 'In Progress', 'In Review', 'Done'];
 
@@ -81,7 +80,6 @@ export const KanbanBoard: React.FC = () => {
 
   // Check if any filters active and no tasks
   const totalFiltered = tasks.length;
-  const _ = ALL_STATUSES; // just to use import
 
   return (
     <div
