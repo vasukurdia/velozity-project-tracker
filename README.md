@@ -122,3 +122,10 @@ Built from scratch using the HTML5 Drag and Drop API in `src/components/kanban/`
 - Zustand selectors prevent unnecessary re-renders
 - Collaboration updates are interval-based (3.5s), not continuous
 - No heavy third-party UI libraries — bundle stays lean
+
+---
+
+## Lighthouse Score
+
+![Lighthouse Score](./screenshots/Performance.jpg)
+```
