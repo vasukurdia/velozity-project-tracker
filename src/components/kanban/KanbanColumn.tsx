@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Task, Status } from '../../types';
 import { STATUS_COLORS } from '../../utils';
 import { KanbanCard } from './KanbanCard';
@@ -12,6 +12,7 @@ interface KanbanColumnProps {
   onDragStart: (e: React.DragEvent, taskId: string) => void;
   onDragOver: (e: React.DragEvent, status: Status, taskId?: string) => void;
   onDrop: (e: React.DragEvent, status: Status, taskId?: string) => void;
+  onPointerDown: (e: React.PointerEvent, taskId: string) => void;
   onDragLeaveColumn: () => void;
 }
 
@@ -22,6 +23,8 @@ const COLUMN_ICONS: Record<Status, string> = {
   'Done': '●',
 };
 
+const INITIAL_LIMIT = 40;
+
 export const KanbanColumn: React.FC<KanbanColumnProps> = ({
   status,
   tasks,
@@ -31,25 +34,32 @@ export const KanbanColumn: React.FC<KanbanColumnProps> = ({
   onDragStart,
   onDragOver,
   onDrop,
+  onPointerDown,
   onDragLeaveColumn,
 }) => {
   const isOver = dragOverColumn === status;
   const color = STATUS_COLORS[status];
+  const [limit, setLimit] = useState(INITIAL_LIMIT);
+
+  const visibleTasks = tasks.slice(0, limit);
+  const hiddenCount = tasks.length - visibleTasks.length;
 
   return (
     <div
       className={`flex flex-col rounded-2xl border transition-all duration-150 min-h-[200px] ${
-        isOver ? 'border-white/25 bg-white/3' : 'border-white/8 bg-surface-1/50'
+        isOver ? 'border-white/25 bg-white/[0.03]' : 'border-white/8 bg-surface-1/50'
       }`}
-      style={{ minWidth: 0 }}
+      data-column={status}
       onDragOver={(e) => onDragOver(e, status)}
       onDrop={(e) => onDrop(e, status)}
       onDragLeave={onDragLeaveColumn}
     >
-      {/* Column header */}
+      {/* Header */}
       <div className="flex items-center justify-between px-4 py-3 border-b border-white/6">
         <div className="flex items-center gap-2">
-          <span style={{ color }} className="text-base leading-none">{COLUMN_ICONS[status]}</span>
+          <span style={{ color }} className="text-base leading-none">
+            {COLUMN_ICONS[status]}
+          </span>
           <h3 className="text-sm font-semibold text-white/80">{status}</h3>
         </div>
         <span
@@ -60,10 +70,16 @@ export const KanbanColumn: React.FC<KanbanColumnProps> = ({
         </span>
       </div>
 
-      {/* Cards area */}
-      <div className="flex-1 overflow-y-auto p-3 space-y-2.5 scrollbar-thin">
+      {/* Cards */}
+      <div
+        className="flex-1 overflow-y-auto p-3 space-y-2.5 scrollbar-thin"
+        data-column={status}
+      >
         {tasks.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-10 text-center">
+          <div
+            className="flex flex-col items-center justify-center py-10 text-center"
+            data-column={status}
+          >
             <div
               className="w-10 h-10 rounded-full flex items-center justify-center mb-3 text-lg"
               style={{ backgroundColor: color + '15', color }}
@@ -74,36 +90,57 @@ export const KanbanColumn: React.FC<KanbanColumnProps> = ({
             <p className="text-[11px] text-white/20 mt-1">Drop a card to add</p>
           </div>
         ) : (
-          tasks.map((task) => (
-            <React.Fragment key={task.id}>
-              {/* Drop indicator above card */}
-              {dragOverTaskId === task.id && draggingId && (
+          <>
+            {visibleTasks.map((task) => (
+              <React.Fragment key={task.id}>
+                {dragOverTaskId === task.id && draggingId && (
+                  <div
+                    className="h-1 rounded-full mx-1"
+                    style={{ backgroundColor: color + '80' }}
+                  />
+                )}
                 <div
-                  className="h-1 rounded-full mx-1 transition-all"
-                  style={{ backgroundColor: color + '80' }}
-                />
-              )}
-              <div
-                onDragOver={(e) => { e.stopPropagation(); onDragOver(e, status, task.id); }}
-                onDrop={(e) => { e.stopPropagation(); onDrop(e, status, task.id); }}
+                  data-column={status}
+                  data-taskid={task.id}
+                  onDragOver={(e) => {
+                    e.stopPropagation();
+                    onDragOver(e, status, task.id);
+                  }}
+                  onDrop={(e) => {
+                    e.stopPropagation();
+                    onDrop(e, status, task.id);
+                  }}
+                >
+                  <KanbanCard
+                    task={task}
+                    onDragStart={onDragStart}
+                    onPointerDown={onPointerDown}
+                    isDragging={draggingId === task.id}
+                  />
+                </div>
+              </React.Fragment>
+            ))}
+
+            {hiddenCount > 0 && (
+              <button
+                onClick={() => setLimit((l) => l + INITIAL_LIMIT)}
+                className="w-full py-2.5 rounded-xl border border-white/8 text-xs text-white/30 hover:text-white/60 hover:border-white/20 transition-all"
               >
-                <KanbanCard
-                  task={task}
-                  onDragStart={onDragStart}
-                  isDragging={draggingId === task.id}
-                />
-              </div>
-            </React.Fragment>
-          ))
+                + {hiddenCount} more tasks
+              </button>
+            )}
+          </>
         )}
 
-        {/* Drop zone at bottom of column */}
         {isOver && !dragOverTaskId && (
           <div
-            className="h-16 rounded-xl border-2 border-dashed flex items-center justify-center transition-all"
+            className="h-16 rounded-xl border-2 border-dashed flex items-center justify-center"
             style={{ borderColor: color + '50', backgroundColor: color + '08' }}
+            data-column={status}
           >
-            <span className="text-xs" style={{ color: color + '80' }}>Drop here</span>
+            <span className="text-xs" style={{ color: color + '80' }}>
+              Drop here
+            </span>
           </div>
         )}
       </div>
