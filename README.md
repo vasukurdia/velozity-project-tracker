@@ -128,4 +128,3 @@ Built from scratch using the HTML5 Drag and Drop API in `src/components/kanban/`
 ## Lighthouse Score
 
 ![Lighthouse Score](./screenshots/Performance.jpg)
-```

@@ -14,12 +14,9 @@ export const KanbanBoard: React.FC = () => {
   const [dragOverTaskId, setDragOverTaskId] = useState<string | null>(null);
   const originStatus = useRef<Status | null>(null);
 
-  // Pointer-based drag state
   const pointerDragging = useRef(false);
   const pointerTaskId = useRef<string | null>(null);
   const ghostRef = useRef<HTMLDivElement | null>(null);
-
-  // ── Mouse/HTML5 drag handlers ──────────────────────────────────────────
 
   const handleDragStart = useCallback(
     (e: React.DragEvent, taskId: string) => {
@@ -73,8 +70,6 @@ export const KanbanBoard: React.FC = () => {
     originStatus.current = null;
   }, []);
 
-  // ── Pointer (touch) drag handlers ─────────────────────────────────────
-
   const getColumnAtPoint = useCallback((x: number, y: number): Status | null => {
     const els = document.elementsFromPoint(x, y);
     for (const el of els) {
@@ -105,7 +100,6 @@ export const KanbanBoard: React.FC = () => {
       if (task) originStatus.current = task.status;
       setDraggingId(taskId);
 
-      // Create floating ghost
       const ghost = document.createElement('div');
       ghost.id = 'pointer-drag-ghost';
       ghost.style.cssText = `
@@ -181,8 +175,6 @@ export const KanbanBoard: React.FC = () => {
     setDragOverTaskId(null);
     originStatus.current = null;
   }, []);
-
-  // ── Render ─────────────────────────────────────────────────────────────
 
   return (
     <div

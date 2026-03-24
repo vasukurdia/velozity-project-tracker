@@ -40,7 +40,6 @@ export const TimelineView: React.FC = () => {
       const due = new Date(task.dueDate + 'T00:00:00');
       const start = task.startDate ? new Date(task.startDate + 'T00:00:00') : due;
 
-      // Clamp to month boundaries for display
       const clampedStart = new Date(Math.max(start.getTime(), monthStart.getTime()));
       const clampedEnd = new Date(Math.min(due.getTime(), new Date(year, month, daysInMonth).getTime()));
 

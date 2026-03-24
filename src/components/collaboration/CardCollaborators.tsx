@@ -9,8 +9,7 @@ interface CardCollaboratorsProps {
 
 export const CardCollaborators: React.FC<CardCollaboratorsProps> = ({ taskId }) => {
   const collaborators = useAppStore((s) => s.collaborators);
-  
-  // Filter outside the selector so selector returns stable reference
+
   const active = collaborators.filter((c) => c.taskId === taskId);
 
   if (active.length === 0) return null;

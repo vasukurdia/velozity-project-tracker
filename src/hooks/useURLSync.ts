@@ -5,7 +5,6 @@ import { FilterState, Status, Priority } from '../types';
 export function useURLSync() {
   const { filters, setFilters, view, setView } = useAppStore();
 
-  // On mount, read URL params and apply to store
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
 
@@ -24,10 +23,8 @@ export function useURLSync() {
     if (hasFilters) {
       setFilters({ statuses, priorities, assignees, dateFrom, dateTo });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Whenever filters or view change, update URL
   useEffect(() => {
     const params = new URLSearchParams();
 
@@ -42,7 +39,6 @@ export function useURLSync() {
     window.history.pushState(null, '', newUrl);
   }, [filters, view]);
 
-  // Handle browser back/forward
   useEffect(() => {
     const handlePop = () => {
       const params = new URLSearchParams(window.location.search);

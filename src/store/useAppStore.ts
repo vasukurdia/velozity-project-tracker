@@ -9,7 +9,6 @@ interface AppState {
   sort: SortState;
   collaborators: CollaboratorPresence[];
 
-  // Actions
   setView: (view: ViewMode) => void;
   updateTaskStatus: (taskId: string, status: Status) => void;
   moveTask: (taskId: string, newStatus: Status, insertBeforeId?: string) => void;
@@ -57,7 +56,6 @@ export const useAppStore = create<AppState>((set, get) => ({
       const withoutTask = state.tasks.filter((t) => t.id !== taskId);
 
       if (!insertBeforeId) {
-        // Append to end of column
         return { tasks: [...withoutTask, updatedTask] };
       }
 

@@ -62,22 +62,20 @@ export function generateTasks(count: number = 500): Task[] {
     const priority = randomItem(PRIORITIES);
     const assigneeId = randomItem(USERS).id;
 
-    // Vary due dates: some overdue, some today, some future
     let dueDaysOffset: number;
     const roll = Math.random();
     if (roll < 0.15) {
-      dueDaysOffset = -randomInt(8, 30); // overdue by more than 7 days
+      dueDaysOffset = -randomInt(8, 30);
     } else if (roll < 0.25) {
-      dueDaysOffset = -randomInt(1, 7); // overdue within a week
+      dueDaysOffset = -randomInt(1, 7);
     } else if (roll < 0.35) {
-      dueDaysOffset = 0; // due today
+      dueDaysOffset = 0;
     } else {
-      dueDaysOffset = randomInt(1, 30); // future
+      dueDaysOffset = randomInt(1, 30);
     }
 
     const dueDate = addDays(today, dueDaysOffset);
 
-    // Some tasks have no start date
     let startDate: string | null = null;
     if (Math.random() > 0.2) {
       const startDaysBack = randomInt(1, 20);

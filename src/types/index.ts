@@ -17,8 +17,8 @@ export interface Task {
   status: Status;
   priority: Priority;
   assigneeId: string;
-  startDate: string | null; // ISO date string
-  dueDate: string; // ISO date string
+  startDate: string | null;
+  dueDate: string;
   description?: string;
 }
 
